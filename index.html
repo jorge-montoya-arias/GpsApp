@@ -1855,25 +1855,83 @@ element.textContent = vehicleNames[mobileId];
 }
 }
 function initMap() {
-map = L.map('map', {
-zoomControl: false,
-tap: false,
-dragging: true,
-preferCanvas: true,
-fadeAnimation: false,
-markerZoomAnimation: false
-}).setView(SCL_COORDS, ZOOM_INICIAL);
-L.control.zoom({
-position: 'bottomright'
-}).addTo(map);
-const savedProvider = localStorage.getItem('mapProvider') || 'esri';
-document.getElementById('mapProvider').value = savedProvider;
-setMapProvider(savedProvider);
-L.marker(SCL_COORDS)
-.addTo(map)
-.bindPopup(' Aeropuerto SCL')
-.openPopup();
-createUserPositionMarker(SCL_COORDS);
+    map = L.map('map', {
+        zoomControl: false,
+        tap: false,
+        dragging: true,
+        preferCanvas: true,
+        fadeAnimation: false,
+        markerZoomAnimation: false
+    }).setView(SCL_COORDS, ZOOM_INICIAL);
+    
+    L.control.zoom({
+        position: 'bottomright'
+    }).addTo(map);
+    
+    const savedProvider = localStorage.getItem('mapProvider') || 'esri';
+    document.getElementById('mapProvider').value = savedProvider;
+    setMapProvider(savedProvider);
+    
+    L.marker(SCL_COORDS)
+        .addTo(map)
+        .bindPopup(' Aeropuerto SCL')
+        .openPopup();
+    
+    createUserPositionMarker(SCL_COORDS);
+    
+    // =============================================
+    // MÓVIL DE PRUEBA AUTOMÁTICO - INTEGRADO
+    // =============================================
+    let pruebaMobile = {
+        marker: null,
+        currentIndex: 0,
+        interval: null,
+        speed: 3000 // 3 segundos entre puntos
+    };
+
+    function initPruebaMobile() {
+        // Crear marcador naranja para diferenciarlo
+        const pruebaIcon = L.divIcon({
+            className: 'vehicle-marker-container',
+            html: `
+                <div class="vehicle-marker online" style="background-color: #FF9800;"></div>
+                <div class="vehicle-label" style="color: #FF9800; font-weight: bold;">Prueba</div>
+            `,
+            iconSize: [32, 42],
+            iconAnchor: [16, 16],
+            popupAnchor: [0, -16]
+        });
+
+        // Posición inicial
+        const startCoords = route1Coordinates[0];
+        pruebaMobile.marker = L.marker(startCoords, {
+            icon: pruebaIcon
+        }).addTo(map).bindPopup('<b>Prueba</b><br>Móvil de prueba automático');
+
+        // Iniciar movimiento automático
+        startPruebaMovement();
+    }
+
+    function startPruebaMovement() {
+        if (pruebaMobile.interval) {
+            clearInterval(pruebaMobile.interval);
+        }
+
+        pruebaMobile.interval = setInterval(() => {
+            // Avanzar al siguiente punto
+            pruebaMobile.currentIndex = (pruebaMobile.currentIndex + 1) % route1Coordinates.length;
+            const nextCoords = route1Coordinates[pruebaMobile.currentIndex];
+            
+            // Mover marcador suavemente
+            if (pruebaMobile.marker) {
+                pruebaMobile.marker.setLatLng(nextCoords);
+            }
+        }, pruebaMobile.speed);
+    }
+
+    // Iniciar el móvil de prueba después de 3 segundos
+    setTimeout(initPruebaMobile, 3000);
+    // =============================================
 }
 function setMapProvider(providerKey) {
 if (currentTileLayer) {
@@ -2490,5 +2548,6 @@ window.location.href = 'login.html';
 </script>
 </body>
 </html>
+
 
 
