@@ -1880,15 +1880,17 @@ function initMap() {
     createUserPositionMarker(SCL_COORDS);
     
     // =============================================
-    // MÓVIL DE PRUEBA AUTOMÁTICO - MOVIMIENTO CONTINUO
+    // MÓVIL DE PRUEBA AUTOMÁTICO - VELOCIDAD CONSTANTE
     // =============================================
     let pruebaMobile = {
         marker: null,
         currentSegment: 0,
         animationInterval: null,
-        speed: 100, // ms entre cada paso de animación (más bajo = más rápido)
-        animationSteps: 50, // Pasos entre cada punto (más alto = más suave)
-        currentStep: 0,
+        speed: 30, // km/h - VELOCIDAD CONSTANTE
+        currentProgress: 0,
+        segmentDistance: 0,
+        totalTravelTime: 0,
+        startTime: null,
         startCoords: null,
         endCoords: null
     };
@@ -1910,13 +1912,24 @@ function initMap() {
         const startCoords = route1Coordinates[0];
         pruebaMobile.marker = L.marker(startCoords, {
             icon: pruebaIcon
-        }).addTo(map).bindPopup('<b>Prueba</b><br>Móvil de prueba automático');
+        }).addTo(map).bindPopup('<b>Prueba</b><br>Móvil de prueba automático<br>Velocidad: 30 km/h');
 
         // Configurar primer segmento
         setupNextSegment();
         
         // Iniciar movimiento continuo
-        startContinuousMovement();
+        startConstantSpeedMovement();
+    }
+
+    function calculateDistance(coord1, coord2) {
+        const R = 6371000; // Radio de la Tierra en metros
+        const dLat = (coord2[0] - coord1[0]) * Math.PI / 180;
+        const dLng = (coord2[1] - coord1[1]) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(coord1[0] * Math.PI / 180) * Math.cos(coord2[0] * Math.PI / 180) *
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c; // Distancia en metros
     }
 
     function setupNextSegment() {
@@ -1925,24 +1938,37 @@ function initMap() {
         
         pruebaMobile.startCoords = route1Coordinates[currentIndex];
         pruebaMobile.endCoords = route1Coordinates[nextIndex];
-        pruebaMobile.currentStep = 0;
+        pruebaMobile.currentProgress = 0;
+        
+        // Calcular distancia del segmento
+        pruebaMobile.segmentDistance = calculateDistance(pruebaMobile.startCoords, pruebaMobile.endCoords);
+        
+        // Calcular tiempo total para este segmento (en ms)
+        // velocidad en km/h -> m/s -> ms por metro
+        const speedMs = (pruebaMobile.speed * 1000) / 3600; // km/h a m/s
+        pruebaMobile.totalTravelTime = (pruebaMobile.segmentDistance / speedMs) * 1000; // en ms
+        
+        pruebaMobile.startTime = Date.now();
         
         // Preparar siguiente segmento
         pruebaMobile.currentSegment = nextIndex;
     }
 
-    function startContinuousMovement() {
+    function startConstantSpeedMovement() {
         if (pruebaMobile.animationInterval) {
             clearInterval(pruebaMobile.animationInterval);
         }
         
+        // Actualizar más frecuentemente para mayor suavidad
         pruebaMobile.animationInterval = setInterval(() => {
-            // Calcular progreso actual
-            const progress = pruebaMobile.currentStep / pruebaMobile.animationSteps;
+            const elapsedTime = Date.now() - pruebaMobile.startTime;
+            
+            // Calcular progreso basado en tiempo (0 a 1)
+            pruebaMobile.currentProgress = Math.min(elapsedTime / pruebaMobile.totalTravelTime, 1);
             
             // Calcular posición interpolada
-            const currentLat = pruebaMobile.startCoords[0] + (pruebaMobile.endCoords[0] - pruebaMobile.startCoords[0]) * progress;
-            const currentLng = pruebaMobile.startCoords[1] + (pruebaMobile.endCoords[1] - pruebaMobile.startCoords[1]) * progress;
+            const currentLat = pruebaMobile.startCoords[0] + (pruebaMobile.endCoords[0] - pruebaMobile.startCoords[0]) * pruebaMobile.currentProgress;
+            const currentLng = pruebaMobile.startCoords[1] + (pruebaMobile.endCoords[1] - pruebaMobile.startCoords[1]) * pruebaMobile.currentProgress;
             
             // Mover marcador
             if (pruebaMobile.marker) {
@@ -1952,14 +1978,11 @@ function initMap() {
                 updateMarkerRotation([currentLat, currentLng]);
             }
             
-            // Avanzar al siguiente paso
-            pruebaMobile.currentStep++;
-            
             // Si completamos este segmento, preparar el siguiente
-            if (pruebaMobile.currentStep > pruebaMobile.animationSteps) {
+            if (pruebaMobile.currentProgress >= 1) {
                 setupNextSegment();
             }
-        }, pruebaMobile.speed);
+        }, 50); // Actualizar cada 50ms para máxima suavidad
     }
 
     function updateMarkerRotation(currentCoords) {
@@ -1973,7 +1996,7 @@ function initMap() {
         if (markerElement) {
             const iconElement = markerElement.querySelector('.vehicle-marker');
             if (iconElement) {
-                iconElement.style.transform = `rotate(${angle + 90}deg)`; // +90 para orientación correcta
+                iconElement.style.transform = `rotate(${angle + 90}deg)`;
             }
         }
     }
@@ -2597,6 +2620,7 @@ window.location.href = 'login.html';
 </script>
 </body>
 </html>
+
 
 
 
