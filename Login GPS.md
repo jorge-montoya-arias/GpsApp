@@ -1,0 +1,753 @@
+# Login GPS  
+  
+<!DOCTYPE html>  
+<html lang="es">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Login GPS Acciona</title>  
+    <style>  
+        :root {  
+            --white: #ffffff;  
+            --red-light: #ffebee;  
+            --red-primary: #f44336;  
+            --red-dark: #d32f2f;  
+            --gray-light: #f5f5f5;  
+            --online-color: #27ae60;  
+            --offline-color: #95a5a6;  
+            --checking-color: #f39c12;  
+        }  
+        * {  
+            box-sizing: border-box;  
+            margin: 0;  
+            padding: 0;  
+            font-family: 'Segoe UI', Arial, sans-serif;  
+        }  
+        body {  
+            background: linear-gradient(135deg, var(--white) 0%, var(--red-light) 100%);  
+            display: flex;  
+            justify-content: center;  
+            align-items: center;  
+            min-height: 100vh;  
+            padding: 20px;  
+        }  
+        .login-container {  
+            background: var(--white);  
+            width: 100%;  
+            max-width: 400px;  
+            padding: 40px 30px;  
+            border-radius: 15px;  
+            box-shadow: 0 10px 30px rgba(244, 67, 54, 0.1);  
+            border: 1px solid rgba(244, 67, 54, 0.1);  
+            text-align: center;  
+        }  
+        .logo {  
+            width: 80px;  
+            height: 80px;  
+            margin: 0 auto 20px;  
+            position: relative;  
+        }  
+        .logo-pin {  
+            width: 40px;  
+            height: 40px;  
+            background: var(--red-primary);  
+            border-radius: 50% 50% 50% 0;  
+            position: absolute;  
+            top: 8;  
+            left: 50%;  
+            transform: translateX(-50%) rotate(-45deg);  
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);  
+        }  
+        .logo-pin::after {  
+            content: '';  
+            width: 20px;  
+            height: 20px;  
+            background: white;  
+            border-radius: 50%;  
+            position: absolute;  
+            top: 10px;  
+            left: 10px;  
+        }  
+        .logo-circle {  
+            width: 60px;  
+            height: 60px;  
+            border: 2px solid var(--red-primary);  
+            border-radius: 50%;  
+            position: absolute;  
+            top: 10px;  
+            left: 50%;  
+            transform: translateX(-50%);  
+            animation: pulse 2s infinite;  
+        }  
+        .logo-circle.inner {  
+            width: 70px;  
+            height: 70px;  
+            opacity: 0.6;  
+            animation-delay: 0.5s;  
+        }  
+        @keyframes pulse {  
+            0% { transform: translateX(-50%) scale(1); opacity: 1; }  
+            100% { transform: translateX(-50%) scale(1.5); opacity: 0; }  
+        }  
+        h1 {  
+            color: var(--red-dark);  
+            margin-bottom: 25px;  
+            font-weight: 600;  
+        }  
+        .form-group {  
+            margin-bottom: 20px;  
+            text-align: left;  
+        }  
+        label {  
+            display: block;  
+            margin-bottom: 8px;  
+            color: var(--red-dark);  
+            font-weight: 500;  
+        }  
+        select, input {  
+            width: 100%;  
+            padding: 12px 15px;  
+            border: 2px solid var(--gray-light);  
+            border-radius: 8px;  
+            font-size: 16px;  
+            transition: all 0.3s;  
+        }  
+        select:focus, input:focus {  
+            border-color: var(--red-primary);  
+            outline: none;  
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);  
+        }  
+        .password-container {  
+            position: relative;  
+        }  
+        .toggle-password {  
+            position: absolute;  
+            right: 12px;  
+            top: 1%;  
+            background: none;  
+            border: none;  
+            cursor: pointer;  
+            color: #666;  
+            font-size: 18px;  
+            padding: 5px;  
+            width: 30px;  
+            height: 30px;  
+            display: flex;  
+            align-items: center;  
+            justify-content: center;  
+            border-radius: 4px;  
+            transition: background-color 0.2s ease;  
+            line-height: 1;  
+        }  
+        .toggle-password:hover {  
+            background-color: rgba(0,0,0,0.05);  
+        }  
+        .toggle-password.hidden {  
+            display: none;  
+        }  
+        .password-input {  
+            padding-right: 45px;  
+        }  
+        .password-input.no-toggle {  
+            padding-right: 15px;  
+        }  
+        button {  
+            width: 100%;  
+            padding: 14px;  
+            background: var(--red-primary);  
+            color: white;  
+            border: none;  
+            border-radius: 8px;  
+            font-size: 16px;  
+            font-weight: 600;  
+            cursor: pointer;  
+            transition: all 0.3s;  
+            margin-top: 10px;  
+        }  
+        button:hover {  
+            background: var(--red-dark);  
+            transform: translateY(-2px);  
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);  
+        }  
+        .error-message {  
+            color: var(--red-dark);  
+            margin-top: 15px;  
+            font-size: 14px;  
+            display: none;  
+            padding: 10px;  
+            background-color: #ffebee;  
+            border-radius: 6px;  
+        }  
+        .auto-login-notice {  
+            background-color: var(--red-light);  
+            color: var(--red-dark);  
+            padding: 10px;  
+            border-radius: 6px;  
+            margin-top: 15px;  
+            font-size: 14px;  
+            display: none;  
+        }  
+        .password-disabled {  
+            background-color: #f0f0f0;  
+            cursor: not-allowed;  
+        }  
+        .vehicle-number-modal {  
+            position: fixed;  
+            top: 0;  
+            left: 0;  
+            width: 100%;  
+            height: 100%;  
+            background: rgba(0,0,0,0.8);  
+            display: none;  
+            align-items: center;  
+            justify-content: center;  
+            z-index: 2000;  
+        }  
+        .vehicle-number-form {  
+            background: white;  
+            padding: 30px;  
+            border-radius: 15px;  
+            width: 90%;  
+            max-width: 400px;  
+            text-align: center;  
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);  
+        }  
+        .vehicle-number-form h2 {  
+            color: var(--red-dark);  
+            margin-bottom: 20px;  
+        }  
+        .vehicle-number-input {  
+            width: 100%;  
+            padding: 15px;  
+            margin: 15px 0;  
+            border: 2px solid var(--gray-light);  
+            border-radius: 8px;  
+            font-size: 18px;  
+            text-align: center;  
+        }  
+        .vehicle-number-input:focus {  
+            border-color: var(--red-primary);  
+            outline: none;  
+            box-shadow: 0 0 0 3px rgba(244, 67, 54, 0.2);  
+        }  
+        .vehicle-number-submit {  
+            background: var(--red-primary);  
+            color: white;  
+            border: none;  
+            padding: 15px 30px;  
+            border-radius: 8px;  
+            cursor: pointer;  
+            font-size: 16px;  
+            font-weight: 600;  
+            transition: all 0.3s;  
+        }  
+        .vehicle-number-submit:hover {  
+            background: var(--red-dark);  
+            transform: translateY(-2px);  
+            box-shadow: 0 5px 15px rgba(211, 47, 47, 0.3);  
+        }  
+        .selected-user-status {  
+            display: none;  
+            align-items: center;  
+            gap: 10px;  
+            margin-top: 8px;  
+            padding: 8px;  
+            background-color: #f8f9fa;  
+            border-radius: 6px;  
+            font-size: 14px;  
+        }  
+        .user-status-indicator {  
+            width: 12px;  
+            height: 12px;  
+            border-radius: 50%;  
+            border: 2px solid white;  
+            box-shadow: 0 0 3px rgba(0,0,0,0.3);  
+        }  
+        .status-online {  
+            background-color: var(--online-color);  
+        }  
+        .status-offline {  
+            background-color: var(--offline-color);  
+        }  
+        .status-checking {  
+            background-color: var(--checking-color);  
+            animation: pulse 1.5s infinite;  
+        }  
+        .status-text {  
+            font-weight: 500;  
+        }  
+        .online-text {  
+            color: var(--online-color);  
+        }  
+        .offline-text {  
+            color: var(--offline-color);  
+        }  
+        .checking-text {  
+            color: var(--checking-color);  
+        }  
+        .last-update {  
+            font-size: 12px;  
+            color: #666;  
+            margin-top: 4px;  
+        }  
+        .loading-spinner {  
+            display: inline-block;  
+            width: 16px;  
+            height: 16px;  
+            border: 2px solid rgba(255,255,255,0.3);  
+            border-radius: 50%;  
+            border-top-color: white;  
+            animation: spin 1s ease-in-out infinite;  
+        }  
+        @keyframes spin {  
+            to { transform: rotate(360deg); }  
+        }  
+        .password-mask {  
+            letter-spacing: 2px;  
+            font-weight: bold;  
+        }  
+    </style>  
+</head>  
+<body>  
+    <div class="login-container">  
+        <div class="logo">  
+            <div class="logo-circle inner"></div>  
+            <div class="logo-circle"></div>  
+            <div class="logo-pin"></div>  
+        </div>  
+        <h1>Acceso GPS Acciona</h1>  
+        <form id="loginForm">  
+            <div class="form-group">  
+                <label for="username">Usuario</label>  
+                <select id="username" required>  
+                    <option value="">Seleccione usuario...</option>  
+                    <option value="Funcionarios">Funcionarios</option>  
+                    <option value="Movil1">Móvil 1</option>  
+                    <option value="Movil2">Móvil 2</option>  
+                    <option value="Movil3">Móvil 3</option>  
+                    <option value="Movil4">Móvil 4</option>  
+                    <option value="Movil5">Móvil 5</option>  
+                    <option value="Movil6">Móvil 6</option>  
+                    <option value="Admin">Admin</option>  
+                </select>  
+                <div class="selected-user-status" id="selectedUserStatus">  
+                    <div class="user-status-indicator status-checking" id="userStatusIndicator"></div>  
+                    <div>  
+                        <span class="status-text checking-text" id="userStatusText">Verificando estado...</span>  
+                        <div class="last-update" id="lastUpdateText"></div>  
+                    </div>  
+                </div>  
+            </div>  
+              
+            <div class="form-group">  
+                <label for="password">Contraseña</label>  
+                <div class="password-container">  
+                    <input type="password" id="password" class="password-input" required>  
+                    <button type="button" class="toggle-password" id="togglePassword">👁️</button>  
+                </div>  
+            </div>  
+              
+            <div class="auto-login-notice" id="autoLoginNotice">  
+                Acceso automático para Funcionarios.  
+            </div>  
+              
+            <button type="submit" id="loginButton">  
+                <span class="loading-spinner" id="loginSpinner" style="display: none;"></span>  
+                Ingresar al Sistema  
+            </button>  
+            <div class="error-message" id="errorMessage"></div>  
+        </form>  
+    </div>  
+  
+    <div class="vehicle-number-modal" id="vehicleNumberModal">  
+        <div class="vehicle-number-form">  
+            <h2>Ingrese número de vehículo</h2>  
+            <input type="text" class="vehicle-number-input" id="vehicleNumberInput" placeholder="Ej: 6142 o Redvan" maxlength="10">  
+            <div class="error-message" id="vehicleError" style="display: none;"></div>  
+            <button class="vehicle-number-submit" id="vehicleNumberSubmit">Continuar</button>  
+        </div>  
+    </div>  
+  
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>  
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>  
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>  
+      
+    <script>  
+        const firebaseConfig = {  
+            apiKey: "AIzaSyDT85qotm1EpAJzJzCFeoNwGyo-VKhM6dk",  
+            authDomain: "gpsaccionascl2025.firebaseapp.com",  
+            databaseURL: "https://gpsaccionascl2025-default-rtdb.firebaseio.com",  
+            projectId: "gpsaccionascl2025",  
+            storageBucket: "gpsaccionascl2025.appspot.com",  
+            messagingSenderId: "742246618721",  
+            appId: "1:742246618721:web:72d0046987416800f07c20"  
+        };  
+          
+        firebase.initializeApp(firebaseConfig);  
+          
+        const FUNCIONARIOS_PASSWORD = "123456";  
+        const ADMIN_PASSWORD = "Admin234452";  
+        const TEN_MINUTES = 10 * 60 * 1000;  
+        const CACHE_DURATION = 10 * 60 * 1000;  
+          
+        let currentUsername = "";  
+        let ghostAuthUser = null;  
+        let userStatusCache = {  
+            data: {},  
+            timestamp: 0  
+        };  
+          
+        const userEmails = {  
+            "Movil1": "movil1@gpsacciona.com",  
+            "Movil2": "movil2@gpsacciona.com",   
+            "Movil3": "movil3@gpsacciona.com",  
+            "Movil4": "movil4@gpsacciona.com",  
+            "Movil5": "movil5@gpsacciona.com",  
+            "Movil6": "movil6@gpsacciona.com",  
+            "Funcionarios": "funcionarios@gpsacciona.com",  
+            "Admin": "admin@acciona.com"  
+        };  
+  
+        const validWords = ["Redvan", "Prueba", "prueba", "redvan", "REDVAN"];  
+  
+        let isFuncionariosSelected = false;  
+  
+        document.getElementById('togglePassword').addEventListener('click', function() {  
+            if (isFuncionariosSelected) return;  
+              
+            const passwordInput = document.getElementById('password');  
+            const toggleButton = document.getElementById('togglePassword');  
+              
+            if (passwordInput.type === 'password') {  
+                passwordInput.type = 'text';  
+                toggleButton.textContent = '👁️';  
+            } else {  
+                passwordInput.type = 'password';  
+                toggleButton.textContent = '👁️';  
+            }  
+        });  
+  
+        function validateVehicleNumber(input) {  
+            const value = input.trim();  
+              
+            if (validWords.includes(value)) {  
+                return true;  
+            }  
+              
+            if (/^\d+$/.test(value)) {  
+                return true;  
+            }  
+              
+            return false;  
+        }  
+  
+        function isVehicleOnline(vehicleData) {  
+            if (!vehicleData || !vehicleData.lastUpdate) return false;  
+            const now = Date.now();  
+            const timeDiff = now - vehicleData.lastUpdate;  
+            return timeDiff < TEN_MINUTES;  
+        }  
+  
+        function formatTimeAgo(timestamp) {  
+            if (!timestamp) return 'Nunca';  
+              
+            const now = Date.now();  
+            const timeDiff = now - timestamp;  
+            const minutesDiff = Math.floor(timeDiff / (60 * 1000));  
+            const hoursDiff = Math.floor(timeDiff / (60 * 60 * 1000));  
+            const daysDiff = Math.floor(timeDiff / (24 * 60 * 60 * 1000));  
+              
+            if (minutesDiff < 1) {  
+                return 'Hace unos segundos';  
+            } else if (minutesDiff < 60) {  
+                return `Hace ${minutesDiff} minuto${minutesDiff > 1 ? 's' : ''}`;  
+            } else if (hoursDiff < 24) {  
+                return `Hace ${hoursDiff} hora${hoursDiff > 1 ? 's' : ''}`;  
+            } else {  
+                return `Hace ${daysDiff} día${daysDiff > 1 ? 's' : ''}`;  
+            }  
+        }  
+  
+        function performGhostAuthentication() {  
+            return new Promise((resolve, reject) => {  
+                if (ghostAuthUser) {  
+                    resolve(ghostAuthUser);  
+                    return;  
+                }  
+                  
+                firebase.auth().signInWithEmailAndPassword(  
+                    userEmails["Funcionarios"],   
+                    FUNCIONARIOS_PASSWORD  
+                ).then((userCredential) => {  
+                    ghostAuthUser = userCredential.user;  
+                    resolve(ghostAuthUser);  
+                }).catch((error) => {  
+                    console.error('Error en autenticación fantasma:', error);  
+                    reject(error);  
+                });  
+            });  
+        }  
+  
+        function checkUserStatus(username) {  
+            const statusContainer = document.getElementById('selectedUserStatus');  
+            const statusIndicator = document.getElementById('userStatusIndicator');  
+            const statusText = document.getElementById('userStatusText');  
+            const lastUpdateText = document.getElementById('lastUpdateText');  
+              
+            if (username.startsWith('Movil')) {  
+                statusContainer.style.display = 'flex';  
+                statusIndicator.className = 'user-status-indicator status-checking';  
+                statusText.className = 'status-text checking-text';  
+                statusText.textContent = 'Verificando estado...';  
+                lastUpdateText.textContent = '';  
+                  
+                if (userStatusCache.data[username] &&   
+                    (Date.now() - userStatusCache.timestamp) < CACHE_DURATION) {  
+                    updateUserStatusFromCache(username, statusIndicator, statusText, lastUpdateText);  
+                    return;  
+                }  
+                  
+                performGhostAuthentication().then(() => {  
+                    return firebase.database().ref(`vehicles/${username}`).once('value');  
+                }).then((snapshot) => {  
+                    const vehicleData = snapshot.val();  
+                    updateUserStatusDisplay(username, vehicleData, statusIndicator, statusText, lastUpdateText);  
+                      
+                    userStatusCache.data[username] = vehicleData;  
+                    userStatusCache.timestamp = Date.now();  
+                }).catch((error) => {  
+                    console.error('Error al verificar estado:', error);  
+                    statusIndicator.className = 'user-status-indicator status-offline';  
+                    statusText.className = 'status-text';  
+                    statusText.style.color = 'green';  
+                    statusText.textContent = '✅ Usuario Disponible.';  
+                    lastUpdateText.textContent = 'Estado no disponible';  
+                });  
+            } else {  
+                statusContainer.style.display = 'none';  
+            }  
+        }  
+  
+        function updateUserStatusFromCache(username, statusIndicator, statusText, lastUpdateText) {  
+            const vehicleData = userStatusCache.data[username];  
+            updateUserStatusDisplay(username, vehicleData, statusIndicator, statusText, lastUpdateText);  
+        }  
+  
+        function updateUserStatusDisplay(username, vehicleData, statusIndicator, statusText, lastUpdateText) {  
+            const now = Date.now();  
+              
+            if (vehicleData) {  
+                const isOnline = isVehicleOnline(vehicleData);  
+                const lastUpdate = vehicleData.lastUpdate || now;  
+                  
+                if (isOnline) {  
+                    statusIndicator.className = 'user-status-indicator status-online';  
+                    statusText.className = 'status-text';  
+                    statusText.style.color = 'red';  
+                    statusText.textContent = '⚠️ Este usuario está en uso.';  
+                    lastUpdateText.textContent = `Conectado: ${formatTimeAgo(lastUpdate)}`;  
+                } else {  
+                    statusIndicator.className = 'user-status-indicator status-offline';  
+                    statusText.className = 'status-text';  
+                    statusText.style.color = 'green';  
+                    statusText.textContent = '✅ Usuario Disponible.';  
+                    lastUpdateText.textContent = `Desconectado: ${formatTimeAgo(lastUpdate)}`;  
+                }  
+            } else {  
+                statusIndicator.className = 'user-status-indicator status-offline';  
+                statusText.className = 'status-text';  
+                statusText.style.color = 'green';  
+                statusText.textContent = '✅ Usuario Disponible.';  
+                lastUpdateText.textContent = 'Nunca se ha conectado';  
+            }  
+        }  
+  
+        function togglePasswordVisibility(show) {  
+            const toggleButton = document.getElementById('togglePassword');  
+            const passwordInput = document.getElementById('password');  
+              
+            if (show) {  
+                toggleButton.classList.remove('hidden');  
+                passwordInput.classList.remove('no-toggle');  
+                passwordInput.classList.add('password-input');  
+            } else {  
+                toggleButton.classList.add('hidden');  
+                passwordInput.classList.remove('password-input');  
+                passwordInput.classList.add('no-toggle');  
+            }  
+        }  
+  
+        function setFuncionariosPassword() {  
+            const passwordInput = document.getElementById('password');  
+            passwordInput.type = 'password';  
+            passwordInput.value = FUNCIONARIOS_PASSWORD;  
+            passwordInput.setAttribute('readonly', 'true');  
+            passwordInput.classList.add('password-disabled');  
+            togglePasswordVisibility(false);  
+            isFuncionariosSelected = true;  
+        }  
+  
+        function clearFuncionariosPassword() {  
+            const passwordInput = document.getElementById('password');  
+            passwordInput.value = '';  
+            passwordInput.removeAttribute('readonly');  
+            passwordInput.classList.remove('password-disabled');  
+            passwordInput.type = 'password';  
+            togglePasswordVisibility(true);  
+            isFuncionariosSelected = false;  
+        }  
+  
+        document.getElementById('username').addEventListener('change', function() {  
+            const username = this.value;  
+            const autoLoginNotice = document.getElementById('autoLoginNotice');  
+            const errorMessage = document.getElementById('errorMessage');  
+  
+            if (username === 'Funcionarios') {  
+                autoLoginNotice.style.display = 'block';  
+                setFuncionariosPassword();  
+            } else if (username.startsWith('Movil')) {  
+                autoLoginNotice.style.display = 'none';  
+                clearFuncionariosPassword();  
+                checkUserStatus(username);  
+            } else {  
+                autoLoginNotice.style.display = 'none';  
+                clearFuncionariosPassword();  
+            }  
+        });  
+  
+        document.getElementById('loginForm').addEventListener('submit', function(e) {  
+            e.preventDefault();  
+              
+            const username = document.getElementById('username').value;  
+            const password = document.getElementById('password').value;  
+            const errorElement = document.getElementById('errorMessage');  
+            const loginButton = document.getElementById('loginButton');  
+            const loginSpinner = document.getElementById('loginSpinner');  
+  
+            if (!username) {  
+                errorElement.textContent = 'Seleccione un usuario válido';  
+                errorElement.style.display = 'block';  
+                return;  
+            }  
+  
+            loginButton.disabled = true;  
+            loginSpinner.style.display = 'inline-block';  
+              
+            const email = userEmails[username];  
+              
+            if (username === 'Funcionarios' && ghostAuthUser) {  
+                currentUsername = username;  
+                  
+                localStorage.setItem('gpsAuth', JSON.stringify({  
+                    username,  
+                    isViewer: true,  
+                    uid: ghostAuthUser.uid  
+                }));  
+                  
+                window.location.href = 'index.html';  
+                return;  
+            }  
+              
+            firebase.auth().signInWithEmailAndPassword(email, password)  
+                .then((userCredential) => {  
+                    currentUsername = username;  
+                      
+                    if (username === 'Funcionarios' || username === 'Admin') {  
+                        localStorage.setItem('gpsAuth', JSON.stringify({  
+                            username,  
+                            isViewer: true,  
+                            uid: userCredential.user.uid  
+                        }));  
+                        window.location.href = 'index.html';  
+                    } else {  
+                        document.getElementById('vehicleNumberModal').style.display = 'flex';  
+                    }  
+                })  
+                .catch((error) => {  
+                    console.error("Error de autenticación:", error);  
+                    errorElement.textContent = 'Usuario o contraseña incorrectos';  
+                    errorElement.style.display = 'block';  
+                      
+                    loginButton.disabled = false;  
+                    loginSpinner.style.display = 'none';  
+                      
+                    setTimeout(() => {  
+                        errorElement.style.display = 'none';  
+                    }, 3000);  
+                });  
+        });  
+  
+        document.getElementById('vehicleNumberSubmit').addEventListener('click', function() {  
+            const vehicleNumber = document.getElementById('vehicleNumberInput').value.trim();  
+            const vehicleError = document.getElementById('vehicleError');  
+              
+            if (!vehicleNumber) {  
+                vehicleError.textContent = 'Por favor ingrese un número de vehículo';  
+                vehicleError.style.display = 'block';  
+                return;  
+            }  
+              
+            if (!validateVehicleNumber(vehicleNumber)) {  
+                vehicleError.textContent = 'Ingrese un número de equipo correcto Ej:6142, si es carrusel Redvan, ingrese "Redvan"';  
+                vehicleError.style.display = 'block';  
+                return;  
+            }  
+              
+            vehicleError.style.display = 'none';  
+              
+            localStorage.setItem('gpsAuth', JSON.stringify({  
+                username: currentUsername,  
+                vehicleNumber: vehicleNumber,  
+                isViewer: false,  
+                uid: firebase.auth().currentUser.uid  
+            }));  
+              
+            window.location.href = 'index.html';  
+        });  
+  
+        document.getElementById('vehicleNumberInput').addEventListener('keypress', function(e) {  
+            if (e.key === 'Enter') {  
+                document.getElementById('vehicleNumberSubmit').click();  
+            }  
+        });  
+  
+        document.getElementById('vehicleNumberInput').addEventListener('input', function(e) {  
+            const vehicleError = document.getElementById('vehicleError');  
+            vehicleError.style.display = 'none';  
+        });  
+  
+        window.addEventListener('load', function() {  
+            const usernameSelect = document.getElementById('username');  
+            if (usernameSelect.value === 'Funcionarios') {  
+                document.getElementById('autoLoginNotice').style.display = 'block';  
+                setFuncionariosPassword();  
+            }  
+              
+            const cachedData = localStorage.getItem('userStatusCache');  
+            if (cachedData) {  
+                try {  
+                    const parsedData = JSON.parse(cachedData);  
+                    if (parsedData.timestamp && (Date.now() - parsedData.timestamp) < CACHE_DURATION) {  
+                        userStatusCache = parsedData;  
+                    }  
+                } catch (e) {  
+                    console.error('Error al cargar caché del almacenamiento local:', e);  
+                }  
+            }  
+              
+            const originalCache = userStatusCache;  
+            userStatusCache = new Proxy(originalCache, {  
+                set(target, property, value) {  
+                    target[property] = value;  
+                      
+                    if (property === 'data' || property === 'timestamp') {  
+                        localStorage.setItem('userStatusCache', JSON.stringify(target));  
+                    }  
+                      
+                    return true;  
+                }  
+            });  
+        });  
+    </script>  
+</body>  
+</html>  
