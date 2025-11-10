@@ -1880,17 +1880,15 @@ function initMap() {
     createUserPositionMarker(SCL_COORDS);
     
     // =============================================
-    // MÓVIL DE PRUEBA AUTOMÁTICO - MOVIMIENTO SUAVE
+    // MÓVIL DE PRUEBA AUTOMÁTICO - MOVIMIENTO CONTINUO
     // =============================================
     let pruebaMobile = {
         marker: null,
-        currentIndex: 0,
-        interval: null,
+        currentSegment: 0,
         animationInterval: null,
-        speed: 5000, // 5 segundos entre puntos principales
-        animationSteps: 20, // Pasos de interpolación entre puntos
+        speed: 100, // ms entre cada paso de animación (más bajo = más rápido)
+        animationSteps: 50, // Pasos entre cada punto (más alto = más suave)
         currentStep: 0,
-        isAnimating: false,
         startCoords: null,
         endCoords: null
     };
@@ -1912,93 +1910,70 @@ function initMap() {
         const startCoords = route1Coordinates[0];
         pruebaMobile.marker = L.marker(startCoords, {
             icon: pruebaIcon
-        }).addTo(map).bindPopup('<b>Prueba</b><br>Móvil de prueba automático<br>Velocidad: Normal');
+        }).addTo(map).bindPopup('<b>Prueba</b><br>Móvil de prueba automático');
 
-        // Iniciar movimiento automático
-        startPruebaMovement();
+        // Configurar primer segmento
+        setupNextSegment();
+        
+        // Iniciar movimiento continuo
+        startContinuousMovement();
     }
 
-    function startPruebaMovement() {
-        if (pruebaMobile.interval) {
-            clearInterval(pruebaMobile.interval);
-        }
-
-        pruebaMobile.interval = setInterval(() => {
-            if (!pruebaMobile.isAnimating) {
-                startNextSegment();
-            }
-        }, pruebaMobile.speed);
-        
-        // Iniciar el primer segmento inmediatamente
-        startNextSegment();
-    }
-
-    function startNextSegment() {
-        if (pruebaMobile.isAnimating) return;
-        
-        pruebaMobile.isAnimating = true;
-        pruebaMobile.currentStep = 0;
-        
-        // Obtener puntos actual y siguiente
-        const currentIndex = pruebaMobile.currentIndex;
+    function setupNextSegment() {
+        const currentIndex = pruebaMobile.currentSegment;
         const nextIndex = (currentIndex + 1) % route1Coordinates.length;
         
         pruebaMobile.startCoords = route1Coordinates[currentIndex];
         pruebaMobile.endCoords = route1Coordinates[nextIndex];
+        pruebaMobile.currentStep = 0;
         
-        // Actualizar índice principal
-        pruebaMobile.currentIndex = nextIndex;
-        
-        // Iniciar animación suave
-        startSmoothAnimation();
+        // Preparar siguiente segmento
+        pruebaMobile.currentSegment = nextIndex;
     }
 
-    function startSmoothAnimation() {
+    function startContinuousMovement() {
         if (pruebaMobile.animationInterval) {
             clearInterval(pruebaMobile.animationInterval);
         }
         
-        const animationSpeed = pruebaMobile.speed / pruebaMobile.animationSteps;
-        
         pruebaMobile.animationInterval = setInterval(() => {
-            if (pruebaMobile.currentStep >= pruebaMobile.animationSteps) {
-                // Animación completada
-                clearInterval(pruebaMobile.animationInterval);
-                pruebaMobile.isAnimating = false;
-                return;
-            }
+            // Calcular progreso actual
+            const progress = pruebaMobile.currentStep / pruebaMobile.animationSteps;
             
             // Calcular posición interpolada
-            const progress = pruebaMobile.currentStep / pruebaMobile.animationSteps;
             const currentLat = pruebaMobile.startCoords[0] + (pruebaMobile.endCoords[0] - pruebaMobile.startCoords[0]) * progress;
             const currentLng = pruebaMobile.startCoords[1] + (pruebaMobile.endCoords[1] - pruebaMobile.startCoords[1]) * progress;
             
-            // Mover marcador suavemente
+            // Mover marcador
             if (pruebaMobile.marker) {
                 pruebaMobile.marker.setLatLng([currentLat, currentLng]);
                 
-                // Rotar el marcador según la dirección (opcional)
+                // Rotar marcador según dirección
                 updateMarkerRotation([currentLat, currentLng]);
             }
             
+            // Avanzar al siguiente paso
             pruebaMobile.currentStep++;
-        }, animationSpeed);
+            
+            // Si completamos este segmento, preparar el siguiente
+            if (pruebaMobile.currentStep > pruebaMobile.animationSteps) {
+                setupNextSegment();
+            }
+        }, pruebaMobile.speed);
     }
 
     function updateMarkerRotation(currentCoords) {
-        // Calcular ángulo de dirección basado en la trayectoria
         if (!pruebaMobile.startCoords || !pruebaMobile.endCoords) return;
         
         const dx = pruebaMobile.endCoords[1] - pruebaMobile.startCoords[1];
         const dy = pruebaMobile.endCoords[0] - pruebaMobile.startCoords[0];
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
         
-        // Aplicar rotación al marcador
         const markerElement = pruebaMobile.marker.getElement();
         if (markerElement) {
             const iconElement = markerElement.querySelector('.vehicle-marker');
             if (iconElement) {
-                iconElement.style.transform = `rotate(${angle}deg)`;
+                iconElement.style.transform = `rotate(${angle + 90}deg)`; // +90 para orientación correcta
             }
         }
     }
@@ -2622,6 +2597,7 @@ window.location.href = 'login.html';
 </script>
 </body>
 </html>
+
 
 
 
