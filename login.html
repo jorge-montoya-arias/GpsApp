@@ -57,6 +57,7 @@
             box-shadow: var(--shadow-hover);
             overflow: hidden;
             min-height: 700px;
+            position: relative;
         }
 
         /* Panel de bienvenida */
@@ -626,6 +627,111 @@
             transform: scale(1.2);
         }
 
+        /* Tooltips del tutorial interactivo */
+        .tutorial-tooltip {
+            position: absolute;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 300px;
+            z-index: 1000;
+            animation: tooltipAppear 0.3s ease-out;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .tutorial-tooltip::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .tutorial-tooltip.top::after {
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px 10px 0 10px;
+            border-color: white transparent transparent transparent;
+        }
+
+        .tutorial-tooltip.bottom::after {
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 10px 10px 10px;
+            border-color: transparent transparent white transparent;
+        }
+
+        .tutorial-tooltip.left::after {
+            right: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px 0 10px 10px;
+            border-color: transparent transparent transparent white;
+        }
+
+        .tutorial-tooltip.right::after {
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 10px 10px 10px 0;
+            border-color: transparent white transparent transparent;
+        }
+
+        .tooltip-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .tooltip-close {
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            cursor: pointer;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .tooltip-close:hover {
+            color: var(--error);
+        }
+
+        .tooltip-content {
+            color: var(--text-dark);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .tooltip-highlight {
+            position: absolute;
+            border: 2px solid var(--secondary);
+            border-radius: var(--radius);
+            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            pointer-events: none;
+            animation: highlightPulse 2s infinite;
+        }
+
+        /* Footer */
+        .footer {
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: var(--text-gray);
+            font-size: 12px;
+            text-align: right;
+        }
+
         /* Animaciones */
         @keyframes pulse {
             0% { transform: scale(1); opacity: 1; }
@@ -644,6 +750,17 @@
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+
+        @keyframes tooltipAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes highlightPulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(0, 176, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0); }
         }
 
         /* Responsive */
@@ -758,6 +875,11 @@
                 
                 <div class="error-message" id="errorMessage"></div>
             </form>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            Diseñado por: Jorge Alejandro Montoya Arias
         </div>
     </div>
     
@@ -971,6 +1093,132 @@
         let isFuncionariosSelected = false;
         let currentTutorialStep = 1;
         const totalTutorialSteps = 6;
+        let interactiveTutorialActive = false;
+        let currentTooltip = null;
+        let currentHighlight = null;
+
+        // Funciones del tutorial interactivo
+        function startInteractiveTutorial() {
+            interactiveTutorialActive = true;
+            showTooltipForElement('username', 'Seleccione el usuario, si es funcionario ingrese como tal, si es Administrador como versión de prueba recomiendo iniciar con este usuario, dado que es el controlador del sistema, normalmente la contraseña estaría oculta pero para que puedan evaluar cada una de las funciones, en esta versión puede ingresar de inmediato', 'bottom');
+        }
+
+        function showTooltipForElement(elementId, message, position = 'bottom') {
+            // Eliminar tooltip anterior si existe
+            if (currentTooltip) {
+                currentTooltip.remove();
+                currentTooltip = null;
+            }
+            
+            // Eliminar highlight anterior si existe
+            if (currentHighlight) {
+                currentHighlight.remove();
+                currentHighlight = null;
+            }
+            
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            // Crear highlight
+            const rect = element.getBoundingClientRect();
+            currentHighlight = document.createElement('div');
+            currentHighlight.className = 'tooltip-highlight';
+            currentHighlight.style.width = (rect.width + 10) + 'px';
+            currentHighlight.style.height = (rect.height + 10) + 'px';
+            currentHighlight.style.top = (rect.top - 5 + window.scrollY) + 'px';
+            currentHighlight.style.left = (rect.left - 5 + window.scrollX) + 'px';
+            document.body.appendChild(currentHighlight);
+            
+            // Crear tooltip
+            currentTooltip = document.createElement('div');
+            currentTooltip.className = `tutorial-tooltip ${position}`;
+            
+            // Posicionar tooltip
+            const tooltipRect = positionTooltip(element, currentTooltip, position);
+            currentTooltip.style.top = tooltipRect.top + 'px';
+            currentTooltip.style.left = tooltipRect.left + 'px';
+            
+            // Contenido del tooltip
+            currentTooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <div class="tooltip-title">Tutorial GPSApp</div>
+                    <button class="tooltip-close" id="tooltipClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="tooltip-content">${message}</div>
+            `;
+            
+            document.body.appendChild(currentTooltip);
+            
+            // Event listener para cerrar tooltip
+            document.getElementById('tooltipClose').addEventListener('click', function() {
+                if (currentTooltip) {
+                    currentTooltip.remove();
+                    currentTooltip = null;
+                }
+                if (currentHighlight) {
+                    currentHighlight.remove();
+                    currentHighlight = null;
+                }
+                
+                // Avanzar al siguiente paso del tutorial
+                if (elementId === 'username') {
+                    // Esperar a que el usuario seleccione Admin
+                    const usernameSelect = document.getElementById('username');
+                    usernameSelect.addEventListener('change', function handleAdminSelection() {
+                        if (this.value === 'Admin') {
+                            usernameSelect.removeEventListener('change', handleAdminSelection);
+                            setTimeout(() => {
+                                showTooltipForElement('loginButton', 'Presione ingresar al sistema para continuar', 'top');
+                            }, 500);
+                        }
+                    });
+                } else if (elementId === 'loginButton') {
+                    // Finalizar tutorial interactivo
+                    interactiveTutorialActive = false;
+                }
+            });
+        }
+
+        function positionTooltip(element, tooltip, position) {
+            const elementRect = element.getBoundingClientRect();
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const scrollX = window.scrollX || window.pageXOffset;
+            const scrollY = window.scrollY || window.pageYOffset;
+            
+            let top, left;
+            
+            switch (position) {
+                case 'top':
+                    top = elementRect.top - tooltipRect.height - 10 + scrollY;
+                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+                    break;
+                case 'bottom':
+                    top = elementRect.bottom + 10 + scrollY;
+                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+                    break;
+                case 'left':
+                    top = elementRect.top + (elementRect.height / 2) - (tooltipRect.height / 2) + scrollY;
+                    left = elementRect.left - tooltipRect.width - 10 + scrollX;
+                    break;
+                case 'right':
+                    top = elementRect.top + (elementRect.height / 2) - (tooltipRect.height / 2) + scrollY;
+                    left = elementRect.right + 10 + scrollX;
+                    break;
+                default:
+                    top = elementRect.bottom + 10 + scrollY;
+                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+            }
+            
+            // Ajustar para que no se salga de la pantalla
+            if (left < 10) left = 10;
+            if (left + tooltipRect.width > window.innerWidth - 10) {
+                left = window.innerWidth - tooltipRect.width - 10;
+            }
+            
+            return { top, left };
+        }
 
         // Funciones del tutorial
         function showTutorialStep(stepNumber) {
@@ -1009,6 +1257,8 @@
             } else {
                 // Cerrar tutorial al llegar al último paso
                 document.getElementById('tutorialOverlay').style.display = 'none';
+                // Iniciar tutorial interactivo
+                startInteractiveTutorial();
             }
         }
 
