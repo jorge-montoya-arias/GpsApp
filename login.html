@@ -459,14 +459,14 @@
             box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
         }
 
-        /* Tutorial */
-        .tutorial-overlay {
+        /* Reproductor de video del tutorial */
+        .video-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             display: none;
             align-items: center;
             justify-content: center;
@@ -474,252 +474,66 @@
             backdrop-filter: blur(5px);
         }
 
-        .tutorial-container {
+        .video-container {
             background: var(--bg-card);
             width: 90%;
-            max-width: 800px;
+            max-width: 900px;
             border-radius: var(--radius);
             overflow: hidden;
             box-shadow: var(--shadow-hover);
             animation: modalAppear 0.4s ease-out;
+            position: relative;
         }
 
-        .tutorial-header {
+        .video-header {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: var(--text-light);
-            padding: 25px 30px;
+            padding: 20px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .tutorial-title {
+        .video-title {
             font-size: 24px;
             font-weight: 700;
         }
 
-        .tutorial-close {
+        .video-close {
             background: none;
             border: none;
             color: var(--text-light);
             font-size: 24px;
             cursor: pointer;
             transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
         }
 
-        .tutorial-close:hover {
+        .video-close:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(1.1);
         }
 
-        .tutorial-content {
-            padding: 30px;
-            max-height: 500px;
-            overflow-y: auto;
-        }
-
-        .tutorial-step {
-            display: none;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .tutorial-step.active {
-            display: block;
-        }
-
-        .step-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .step-number {
-            background: var(--primary);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .step-description {
-            margin-bottom: 20px;
-            line-height: 1.6;
-            color: var(--text-dark);
-        }
-
-        .step-image {
-            background: var(--bg-light);
-            border-radius: var(--radius);
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            min-height: 150px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-gray);
-            font-style: italic;
-        }
-
-        .tutorial-navigation {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 30px;
-            border-top: 1px solid var(--gray-light);
-        }
-
-        .tutorial-btn-prev, .tutorial-btn-next {
-            padding: 12px 24px;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            border: none;
-        }
-
-        .tutorial-btn-prev {
-            background: var(--bg-light);
-            color: var(--text-dark);
-        }
-
-        .tutorial-btn-next {
-            background: var(--primary);
-            color: white;
-        }
-
-        .tutorial-btn-prev:hover, .tutorial-btn-next:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .tutorial-btn-prev:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .tutorial-progress {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-
-        .progress-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--gray-light);
-            transition: var(--transition);
-        }
-
-        .progress-dot.active {
-            background: var(--primary);
-            transform: scale(1.2);
-        }
-
-        /* Tooltips del tutorial interactivo */
-        .tutorial-tooltip {
-            position: absolute;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            max-width: 300px;
-            z-index: 1000;
-            animation: tooltipAppear 0.3s ease-out;
-            border-left: 4px solid var(--secondary);
-        }
-
-        .tutorial-tooltip::after {
-            content: '';
-            position: absolute;
-            width: 0;
+        .video-content {
+            padding: 0;
+            position: relative;
+            width: 100%;
             height: 0;
-            border-style: solid;
+            padding-bottom: 56.25%; /* Aspect ratio 16:9 */
         }
 
-        .tutorial-tooltip.top::after {
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 10px 10px 0 10px;
-            border-color: white transparent transparent transparent;
-        }
-
-        .tutorial-tooltip.bottom::after {
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-width: 0 10px 10px 10px;
-            border-color: transparent transparent white transparent;
-        }
-
-        .tutorial-tooltip.left::after {
-            right: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 10px 0 10px 10px;
-            border-color: transparent transparent transparent white;
-        }
-
-        .tutorial-tooltip.right::after {
-            left: -10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-width: 10px 10px 10px 0;
-            border-color: transparent white transparent transparent;
-        }
-
-        .tooltip-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .tooltip-title {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 16px;
-        }
-
-        .tooltip-close {
-            background: none;
-            border: none;
-            color: var(--text-gray);
-            cursor: pointer;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-
-        .tooltip-close:hover {
-            color: var(--error);
-        }
-
-        .tooltip-content {
-            color: var(--text-dark);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .tooltip-highlight {
+        .video-player {
             position: absolute;
-            border: 2px solid var(--secondary);
-            border-radius: var(--radius);
-            box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            pointer-events: none;
-            animation: highlightPulse 2s infinite;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         /* Footer */
@@ -752,17 +566,6 @@
             to { opacity: 1; }
         }
 
-        @keyframes tooltipAppear {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes highlightPulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(0, 176, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 176, 255, 0); }
-        }
-
         /* Responsive */
         @media (max-width: 900px) {
             .app-container {
@@ -788,12 +591,12 @@
                 padding: 30px 20px;
             }
             
-            .tutorial-container {
+            .video-container {
                 width: 95%;
             }
             
-            .tutorial-content {
-                padding: 20px;
+            .video-header {
+                padding: 15px 20px;
             }
         }
     </style>
@@ -894,154 +697,25 @@
         </div>
     </div>
     
-    <!-- Tutorial -->
-    <div class="tutorial-overlay" id="tutorialOverlay">
-        <div class="tutorial-container">
-            <div class="tutorial-header">
-                <h2 class="tutorial-title">Bienvenido a GPSApp</h2>
-                <button class="tutorial-close" id="tutorialClose">
+    <!-- Reproductor de video del tutorial -->
+    <div class="video-overlay" id="videoOverlay">
+        <div class="video-container">
+            <div class="video-header">
+                <h2 class="video-title">Tutorial GPSApp</h2>
+                <button class="video-close" id="videoClose">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             
-            <div class="tutorial-content">
-                <!-- Paso 1: Bienvenida -->
-                <div class="tutorial-step active" id="step1">
-                    <h3 class="step-title">
-                        <span class="step-number">1</span>
-                        Bienvenida
-                    </h3>
-                    <p class="step-description">
-                        Bienvenido a GPSApp, la solución tecnológica desarrollada para optimizar la gestión de transporte interno en empresas con operaciones en aeropuertos.
-                    </p>
-                    <div class="step-image">
-                        <i class="fas fa-map-marked-alt" style="font-size: 48px; color: var(--primary);"></i>
-                    </div>
-                    <p class="step-description">
-                        Esta plataforma permite al personal en tierra visualizar en tiempo real la ubicación de los vehículos de la compañía y calcular tiempos estimados de recogida.
-                    </p>
-                </div>
-                
-                <!-- Paso 2: Selección de usuario -->
-                <div class="tutorial-step" id="step2">
-                    <h3 class="step-title">
-                        <span class="step-number">2</span>
-                        Selección de Usuario
-                    </h3>
-                    <p class="step-description">
-                        Para iniciar sesión, primero seleccione su tipo de usuario en el menú desplegable. Las opciones disponibles son:
-                    </p>
-                    <div class="step-image">
-                        <div style="text-align: left; width: 100%;">
-                            <p><strong>Funcionarios:</strong> Acceso de solo visualización</p>
-                            <p><strong>Móvil 1-6:</strong> Conductores de vehículos específicos</p>
-                            <p><strong>Admin:</strong> Acceso administrativo completo</p>
-                        </div>
-                    </div>
-                    <p class="step-description">
-                        Al seleccionar "Funcionarios", la contraseña se completará automáticamente.
-                    </p>
-                </div>
-                
-                <!-- Paso 3: Contraseña -->
-                <div class="tutorial-step" id="step3">
-                    <h3 class="step-title">
-                        <span class="step-number">3</span>
-                        Ingreso de Contraseña
-                    </h3>
-                    <p class="step-description">
-                        Ingrese su contraseña en el campo correspondiente. Para los usuarios "Funcionarios", la contraseña se completará automáticamente.
-                    </p>
-                    <div class="step-image">
-                        <i class="fas fa-lock" style="font-size: 48px; color: var(--primary);"></i>
-                    </div>
-                    <p class="step-description">
-                        Puede hacer clic en el icono del ojo para mostrar u ocultar la contraseña (excepto para administradores).
-                    </p>
-                </div>
-                
-                <!-- Paso 4: Estado del usuario -->
-                <div class="tutorial-step" id="step4">
-                    <h3 class="step-title">
-                        <span class="step-number">4</span>
-                        Estado del Usuario
-                    </h3>
-                    <p class="step-description">
-                        Al seleccionar un usuario móvil (Móvil 1-6), el sistema verificará automáticamente si ese vehículo está actualmente en uso.
-                    </p>
-                    <div class="step-image">
-                        <div style="display: flex; gap: 15px; justify-content: center; width: 100%;">
-                            <div style="text-align: center;">
-                                <div class="user-status-indicator status-online"></div>
-                                <p style="margin-top: 5px; font-size: 12px;">En uso</p>
-                            </div>
-                            <div style="text-align: center;">
-                                <div class="user-status-indicator status-offline"></div>
-                                <p style="margin-top: 5px; font-size: 12px;">Disponible</p>
-                            </div>
-                        </div>
-                    </div>
-                    <p class="step-description">
-                        El indicador verde significa que el vehículo está disponible, mientras que el rojo indica que ya está en uso.
-                    </p>
-                </div>
-                
-                <!-- Paso 5: Número de vehículo -->
-                <div class="tutorial-step" id="step5">
-                    <h3 class="step-title">
-                        <span class="step-number">5</span>
-                        Número de Vehículo
-                    </h3>
-                    <p class="step-description">
-                        Si inicia sesión como conductor (Móvil 1-6), se le pedirá que ingrese el número o identificador de su vehículo.
-                    </p>
-                    <div class="step-image">
-                        <i class="fas fa-truck" style="font-size: 48px; color: var(--primary);"></i>
-                    </div>
-                    <p class="step-description">
-                        Puede ingresar un número (ej: 6142) o una palabra clave como "Redvan" para carruseles.
-                    </p>
-                </div>
-                
-                <!-- Paso 6: Acceso al sistema -->
-                <div class="tutorial-step" id="step6">
-                    <h3 class="step-title">
-                        <span class="step-number">6</span>
-                        Acceso al Sistema
-                    </h3>
-                    <p class="step-description">
-                        Una vez completado el proceso de inicio de sesión, accederá al panel principal de GPSApp donde podrá:
-                    </p>
-                    <div class="step-image">
-                        <div style="text-align: left; width: 100%;">
-                            <p><i class="fas fa-map-marker-alt" style="color: var(--success);"></i> Visualizar ubicación de vehículos en tiempo real</p>
-                            <p><i class="fas fa-clock" style="color: var(--warning);"></i> Calcular tiempos estimados de recogida</p>
-                            <p><i class="fas fa-route" style="color: var(--secondary);"></i> Gestionar rutas y asignaciones</p>
-                        </div>
-                    </div>
-                    <p class="step-description">
-                        ¡Está listo para comenzar a utilizar GPSApp!
-                    </p>
-                </div>
-            </div>
-            
-            <div class="tutorial-navigation">
-                <button class="tutorial-btn-prev" id="tutorialPrev" disabled>
-                    <i class="fas fa-arrow-left"></i> Anterior
-                </button>
-                
-                <div class="tutorial-progress">
-                    <div class="progress-dot active"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
-                    <div class="progress-dot"></div>
-                </div>
-                
-                <button class="tutorial-btn-next" id="tutorialNext">
-                    Siguiente <i class="fas fa-arrow-right"></i>
-                </button>
+            <div class="video-content">
+                <!-- Espacio para pegar el link del video -->
+                <iframe class="video-player" 
+                        src="https://www.youtube.com/embed/VIDEO_ID" 
+                        title="Tutorial GPSApp" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
             </div>
         </div>
     </div>
@@ -1091,195 +765,22 @@
         const validWords = ["Redvan", "Prueba", "prueba", "redvan", "REDVAN"];
 
         let isFuncionariosSelected = false;
-        let currentTutorialStep = 1;
-        const totalTutorialSteps = 6;
-        let interactiveTutorialActive = false;
-        let currentTooltip = null;
-        let currentHighlight = null;
 
-        // Funciones del tutorial interactivo
-        function startInteractiveTutorial() {
-            interactiveTutorialActive = true;
-            showTooltipForElement('username', 'Seleccione el usuario, si es funcionario ingrese como tal, si es Administrador como versión de prueba recomiendo iniciar con este usuario, dado que es el controlador del sistema, normalmente la contraseña estaría oculta pero para que puedan evaluar cada una de las funciones, en esta versión puede ingresar de inmediato', 'bottom');
-        }
-
-        function showTooltipForElement(elementId, message, position = 'bottom') {
-            // Eliminar tooltip anterior si existe
-            if (currentTooltip) {
-                currentTooltip.remove();
-                currentTooltip = null;
-            }
-            
-            // Eliminar highlight anterior si existe
-            if (currentHighlight) {
-                currentHighlight.remove();
-                currentHighlight = null;
-            }
-            
-            const element = document.getElementById(elementId);
-            if (!element) return;
-            
-            // Crear highlight
-            const rect = element.getBoundingClientRect();
-            currentHighlight = document.createElement('div');
-            currentHighlight.className = 'tooltip-highlight';
-            currentHighlight.style.width = (rect.width + 10) + 'px';
-            currentHighlight.style.height = (rect.height + 10) + 'px';
-            currentHighlight.style.top = (rect.top - 5 + window.scrollY) + 'px';
-            currentHighlight.style.left = (rect.left - 5 + window.scrollX) + 'px';
-            document.body.appendChild(currentHighlight);
-            
-            // Crear tooltip
-            currentTooltip = document.createElement('div');
-            currentTooltip.className = `tutorial-tooltip ${position}`;
-            
-            // Posicionar tooltip
-            const tooltipRect = positionTooltip(element, currentTooltip, position);
-            currentTooltip.style.top = tooltipRect.top + 'px';
-            currentTooltip.style.left = tooltipRect.left + 'px';
-            
-            // Contenido del tooltip
-            currentTooltip.innerHTML = `
-                <div class="tooltip-header">
-                    <div class="tooltip-title">Tutorial GPSApp</div>
-                    <button class="tooltip-close" id="tooltipClose">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
-                <div class="tooltip-content">${message}</div>
-            `;
-            
-            document.body.appendChild(currentTooltip);
-            
-            // Event listener para cerrar tooltip
-            document.getElementById('tooltipClose').addEventListener('click', function() {
-                if (currentTooltip) {
-                    currentTooltip.remove();
-                    currentTooltip = null;
-                }
-                if (currentHighlight) {
-                    currentHighlight.remove();
-                    currentHighlight = null;
-                }
-                
-                // Avanzar al siguiente paso del tutorial
-                if (elementId === 'username') {
-                    // Esperar a que el usuario seleccione Admin
-                    const usernameSelect = document.getElementById('username');
-                    const handleAdminSelection = function() {
-                        if (this.value === 'Admin') {
-                            usernameSelect.removeEventListener('change', handleAdminSelection);
-                            setTimeout(() => {
-                                showTooltipForElement('loginButton', 'Presione ingresar al sistema para continuar', 'top');
-                            }, 500);
-                        }
-                    };
-                    usernameSelect.addEventListener('change', handleAdminSelection);
-                } else if (elementId === 'loginButton') {
-                    // Finalizar tutorial interactivo
-                    interactiveTutorialActive = false;
-                }
-            });
-        }
-
-        function positionTooltip(element, tooltip, position) {
-            const elementRect = element.getBoundingClientRect();
-            const scrollX = window.scrollX || window.pageXOffset;
-            const scrollY = window.scrollY || window.pageYOffset;
-            
-            let top, left;
-            
-            switch (position) {
-                case 'top':
-                    top = elementRect.top - 150 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
-                    break;
-                case 'bottom':
-                    top = elementRect.bottom + 10 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
-                    break;
-                case 'left':
-                    top = elementRect.top + (elementRect.height / 2) - 75 + scrollY;
-                    left = elementRect.left - 320 + scrollX;
-                    break;
-                case 'right':
-                    top = elementRect.top + (elementRect.height / 2) - 75 + scrollY;
-                    left = elementRect.right + 10 + scrollX;
-                    break;
-                default:
-                    top = elementRect.bottom + 10 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
-            }
-            
-            // Ajustar para que no se salga de la pantalla
-            if (left < 10) left = 10;
-            if (left + 300 > window.innerWidth - 10) {
-                left = window.innerWidth - 310;
-            }
-            
-            return { top, left };
-        }
-
-        // Funciones del tutorial
-        function showTutorialStep(stepNumber) {
-            // Ocultar todos los pasos
-            document.querySelectorAll('.tutorial-step').forEach(step => {
-                step.classList.remove('active');
-            });
-            
-            // Mostrar el paso actual
-            document.getElementById(`step${stepNumber}`).classList.add('active');
-            
-            // Actualizar indicadores de progreso
-            document.querySelectorAll('.progress-dot').forEach((dot, index) => {
-                if (index === stepNumber - 1) {
-                    dot.classList.add('active');
-                } else {
-                    dot.classList.remove('active');
-                }
-            });
-            
-            // Actualizar botones de navegación
-            document.getElementById('tutorialPrev').disabled = stepNumber === 1;
-            
-            if (stepNumber === totalTutorialSteps) {
-                document.getElementById('tutorialNext').innerHTML = 'Comenzar <i class="fas fa-play"></i>';
-            } else {
-                document.getElementById('tutorialNext').innerHTML = 'Siguiente <i class="fas fa-arrow-right"></i>';
-            }
-            
-            currentTutorialStep = stepNumber;
-        }
-
-        function nextTutorialStep() {
-            if (currentTutorialStep < totalTutorialSteps) {
-                showTutorialStep(currentTutorialStep + 1);
-            } else {
-                // Cerrar tutorial al llegar al último paso
-                document.getElementById('tutorialOverlay').style.display = 'none';
-                // Iniciar tutorial interactivo
-                startInteractiveTutorial();
-            }
-        }
-
-        function prevTutorialStep() {
-            if (currentTutorialStep > 1) {
-                showTutorialStep(currentTutorialStep - 1);
-            }
-        }
-
-        // Event listeners del tutorial
+        // Event listeners para el reproductor de video
         document.getElementById('tutorialButton').addEventListener('click', function() {
-            document.getElementById('tutorialOverlay').style.display = 'flex';
-            showTutorialStep(1);
+            document.getElementById('videoOverlay').style.display = 'flex';
         });
 
-        document.getElementById('tutorialClose').addEventListener('click', function() {
-            document.getElementById('tutorialOverlay').style.display = 'none';
+        document.getElementById('videoClose').addEventListener('click', function() {
+            document.getElementById('videoOverlay').style.display = 'none';
         });
 
-        document.getElementById('tutorialNext').addEventListener('click', nextTutorialStep);
-        document.getElementById('tutorialPrev').addEventListener('click', prevTutorialStep);
+        // Cerrar el video al hacer clic fuera del contenedor
+        document.getElementById('videoOverlay').addEventListener('click', function(e) {
+            if (e.target === this) {
+                document.getElementById('videoOverlay').style.display = 'none';
+            }
+        });
 
         // Funcionalidad existente (sin cambios)
         document.getElementById('togglePassword').addEventListener('click', function() {
