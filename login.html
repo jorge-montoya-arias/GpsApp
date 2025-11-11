@@ -143,10 +143,10 @@
         }
 
         .tutorial-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.4);
             color: var(--text-light);
-            padding: 12px 24px;
+            padding: 14px 28px;
             border-radius: 50px;
             font-size: 16px;
             font-weight: 600;
@@ -156,15 +156,23 @@
             align-items: center;
             justify-content: center;
             width: fit-content;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
         }
 
         .tutorial-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+        }
+
+        .tutorial-btn:active {
+            transform: translateY(-1px);
         }
 
         .tutorial-btn i {
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 18px;
         }
 
         /* Panel de login */
@@ -710,7 +718,7 @@
             <div class="video-content">
                 <!-- Espacio para pegar el link del video -->
                 <iframe class="video-player" 
-                        src="https://www.youtube.com/watch?v=NcXsK_u4ixI&list=RDNcXsK_u4ixI&start_radio=1" 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
                         title="Tutorial GPSApp" 
                         frameborder="0" 
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -768,6 +776,7 @@
 
         // Event listeners para el reproductor de video
         document.getElementById('tutorialButton').addEventListener('click', function() {
+            console.log("Botón tutorial presionado");
             document.getElementById('videoOverlay').style.display = 'flex';
         });
 
