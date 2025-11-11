@@ -14,6 +14,7 @@
             --secondary-light: #69e2ff;
             --secondary-dark: #0081cb;
             --accent: #ff4081;
+            --accent-blue: #2196f3;
             --text-light: #ffffff;
             --text-dark: #212121;
             --text-gray: #757575;
@@ -142,18 +143,20 @@
             color: var(--secondary-light);
         }
 
-        /* BOTÓN TUTORIAL EXTREMO - COLOR ROSA */
-        .tutorial-btn-container {
+        /* BOTONES TUTORIAL SEPARADOS */
+        .tutorial-buttons-container {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .tutorial-btn {
-            background: linear-gradient(135deg, #ff4081 0%, #ff79a9 100%);
             border: none;
             color: white;
             padding: 16px 30px;
             border-radius: 50px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.4s ease;
@@ -162,7 +165,7 @@
             justify-content: center;
             width: 100%;
             max-width: 280px;
-            box-shadow: 0 6px 20px rgba(255, 64, 129, 0.4);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             position: relative;
             overflow: hidden;
             z-index: 1;
@@ -175,7 +178,6 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #ff79a9 0%, #ff4081 100%);
             z-index: -1;
             transition: opacity 0.4s ease;
             opacity: 0;
@@ -183,7 +185,7 @@
 
         .tutorial-btn:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(255, 64, 129, 0.6);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
         .tutorial-btn:hover::before {
@@ -196,7 +198,7 @@
 
         .tutorial-btn i {
             margin-right: 12px;
-            font-size: 20px;
+            font-size: 18px;
         }
 
         .tutorial-btn .btn-text {
@@ -214,6 +216,24 @@
             left: 0;
             z-index: 0;
             animation: pulse 2s infinite;
+        }
+
+        /* Botón Tutorial Paso a Paso (Azul) */
+        .tutorial-steps-btn {
+            background: linear-gradient(135deg, var(--accent-blue) 0%, #64b5f6 100%);
+        }
+
+        .tutorial-steps-btn::before {
+            background: linear-gradient(135deg, #64b5f6 0%, var(--accent-blue) 100%);
+        }
+
+        /* Botón Video Tutorial (Rosa) */
+        .tutorial-video-btn {
+            background: linear-gradient(135deg, #ff4081 0%, #ff79a9 100%);
+        }
+
+        .tutorial-video-btn::before {
+            background: linear-gradient(135deg, #ff79a9 0%, #ff4081 100%);
         }
 
         /* Panel de login */
@@ -508,7 +528,7 @@
             box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
         }
 
-        /* REPRODUCTOR DE VIDEO EXTREMO */
+        /* REPRODUCTOR DE VIDEO */
         .video-overlay {
             position: fixed;
             top: 0;
@@ -594,41 +614,7 @@
             border: none;
         }
 
-        .video-placeholder {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .video-placeholder i {
-            font-size: 80px;
-            margin-bottom: 20px;
-            color: var(--secondary-light);
-        }
-
-        .video-placeholder h3 {
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-
-        .video-placeholder p {
-            font-size: 16px;
-            opacity: 0.9;
-            max-width: 500px;
-            line-height: 1.5;
-        }
-
-        /* Tutorial existente (mantenido para compatibilidad) */
+        /* TUTORIAL PASO A PASO */
         .tutorial-overlay {
             position: fixed;
             top: 0;
@@ -893,14 +879,18 @@
 
         /* Footer */
         .footer {
-    position: absolute;
-    bottom: 15px;
-    right: 20px;
-    color: #000000;           /* Color negro puro */
-    font-size: 16px;          /* Tamaño aumentado */
-    text-align: right;
-    font-weight: 600;         /* Opcional: texto más grueso */
-}
+            position: absolute;
+            bottom: 15px;
+            right: 20px;
+            color: #000000;
+            font-size: 16px;
+            text-align: right;
+            font-weight: 600;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
 
         /* Animaciones */
         @keyframes pulse {
@@ -953,6 +943,10 @@
             .login-panel {
                 padding: 40px 30px;
             }
+            
+            .tutorial-buttons-container {
+                align-items: center;
+            }
         }
 
         @media (max-width: 480px) {
@@ -989,6 +983,11 @@
             .tutorial-content {
                 padding: 20px;
             }
+            
+            .footer {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
         }
     </style>
 </head>
@@ -1013,12 +1012,18 @@
                 <li><i class="fas fa-check-circle"></i> Interfaz intuitiva y fácil de usar</li>
             </ul>
             
-            <!-- BOTÓN TUTORIAL EXTREMO -->
-            <div class="tutorial-btn-container">
-                <button class="tutorial-btn" id="tutorialButton">
+            <!-- BOTONES TUTORIAL SEPARADOS -->
+            <div class="tutorial-buttons-container">
+                <button class="tutorial-btn tutorial-steps-btn" id="tutorialStepsButton">
+                    <div class="pulse-effect"></div>
+                    <i class="fas fa-info-circle"></i>
+                    <span class="btn-text">Tutorial Paso a Paso</span>
+                </button>
+                
+                <button class="tutorial-btn tutorial-video-btn" id="tutorialVideoButton">
                     <div class="pulse-effect"></div>
                     <i class="fas fa-play-circle"></i>
-                    <span class="btn-text">Ver Tutorial</span>
+                    <span class="btn-text">Video Tutorial</span>
                 </button>
             </div>
         </div>
@@ -1093,13 +1098,13 @@
         </div>
     </div>
     
-    <!-- REPRODUCTOR DE VIDEO EXTREMO -->
+    <!-- REPRODUCTOR DE VIDEO -->
     <div class="video-overlay" id="videoOverlay">
         <div class="video-container">
             <div class="video-header">
                 <h2 class="video-title">
                     <i class="fas fa-film"></i>
-                    Tutorial GPSApp
+                    Video Tutorial GPSApp
                 </h2>
                 <button class="video-close" id="videoClose">
                     <i class="fas fa-times"></i>
@@ -1107,31 +1112,22 @@
             </div>
             
             <div class="video-content">
-                <!-- VIDEO DE PRUEBA - REEMPLAZA CON TU VIDEO -->
-                <div class="video-placeholder" id="videoPlaceholder">
-                    <i class="fas fa-video"></i>
-                    <h3>Video Tutorial GPSApp</h3>
-                    <p>Para usar tu propio video, reemplaza esta sección con tu reproductor de video preferido (YouTube, Vimeo, etc.)</p>
-                    <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;">
-                        <strong>Instrucciones:</strong> Reemplaza todo el contenido de "video-placeholder" con tu código de embed de video
-                    </p>
-                </div>
                 <iframe class="video-player" 
-        src="https://www.youtube.com/embed/NcXsK_u4ixI" 
-        title="Tutorial GPSApp" 
-        frameborder="0" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        allowfullscreen>
-</iframe>
+                        src="https://www.youtube.com/embed/NcXsK_u4ixI" 
+                        title="Tutorial GPSApp" 
+                        frameborder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowfullscreen>
+                </iframe>
             </div>
         </div>
     </div>
 
-    <!-- Tutorial existente (mantenido para compatibilidad) -->
+    <!-- TUTORIAL PASO A PASO -->
     <div class="tutorial-overlay" id="tutorialOverlay">
         <div class="tutorial-container">
             <div class="tutorial-header">
-                <h2 class="tutorial-title">Bienvenido a GPSApp</h2>
+                <h2 class="tutorial-title">Tutorial GPSApp - Paso a Paso</h2>
                 <button class="tutorial-close" id="tutorialClose">
                     <i class="fas fa-times"></i>
                 </button>
@@ -1285,17 +1281,33 @@
     
     <script>
         // =============================================
-        // SISTEMA EXTREMO - BOTÓN TUTORIAL 100% FUNCIONAL
+        // SISTEMA DE TUTORIALES SEPARADOS
         // =============================================
         
-        // 1. SELECCIÓN DIRECTA DEL BOTÓN
-        const tutorialButton = document.getElementById('tutorialButton');
+        // 1. ELEMENTOS PRINCIPALES
+        const tutorialStepsButton = document.getElementById('tutorialStepsButton');
+        const tutorialVideoButton = document.getElementById('tutorialVideoButton');
+        const tutorialOverlay = document.getElementById('tutorialOverlay');
         const videoOverlay = document.getElementById('videoOverlay');
+        const tutorialClose = document.getElementById('tutorialClose');
         const videoClose = document.getElementById('videoClose');
         
-        // 2. EVENTO DE CLIC DIRECTO - MÁXIMA PRIORIDAD
-        tutorialButton.addEventListener('click', function() {
-            console.log('✅ BOTÓN TUTORIAL PRESIONADO - ABRIENDO VIDEO');
+        // 2. EVENTOS PARA TUTORIAL PASO A PASO
+        tutorialStepsButton.addEventListener('click', function() {
+            console.log('✅ BOTÓN TUTORIAL PASO A PASO PRESIONADO');
+            tutorialOverlay.style.display = 'flex';
+            showTutorialStep(1);
+            
+            // Efecto visual de confirmación
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+        
+        // 3. EVENTOS PARA VIDEO TUTORIAL
+        tutorialVideoButton.addEventListener('click', function() {
+            console.log('✅ BOTÓN VIDEO TUTORIAL PRESIONADO');
             videoOverlay.style.display = 'flex';
             
             // Efecto visual de confirmación
@@ -1305,12 +1317,22 @@
             }, 150);
         });
         
-        // 3. CERRAR VIDEO - MÚLTIPLES MÉTODOS
+        // 4. CERRAR OVERLAYS
+        tutorialClose.addEventListener('click', function() {
+            tutorialOverlay.style.display = 'none';
+        });
+        
         videoClose.addEventListener('click', function() {
             videoOverlay.style.display = 'none';
         });
         
-        // Cerrar al hacer clic fuera del video
+        // Cerrar al hacer clic fuera del contenido
+        tutorialOverlay.addEventListener('click', function(e) {
+            if (e.target === this) {
+                tutorialOverlay.style.display = 'none';
+            }
+        });
+        
         videoOverlay.addEventListener('click', function(e) {
             if (e.target === this) {
                 videoOverlay.style.display = 'none';
@@ -1319,19 +1341,23 @@
         
         // Cerrar con tecla ESC
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && videoOverlay.style.display === 'flex') {
-                videoOverlay.style.display = 'none';
+            if (e.key === 'Escape') {
+                if (tutorialOverlay.style.display === 'flex') {
+                    tutorialOverlay.style.display = 'none';
+                }
+                if (videoOverlay.style.display === 'flex') {
+                    videoOverlay.style.display = 'none';
+                }
             }
         });
         
-        // 4. VERIFICACIÓN DE FUNCIONAMIENTO
-        console.log('🚀 SISTEMA DE TUTORIAL INICIADO');
-        console.log('📍 Botón tutorial:', tutorialButton);
-        console.log('📍 Overlay video:', videoOverlay);
+        // 5. VERIFICACIÓN DE FUNCIONAMIENTO
+        console.log('🚀 SISTEMA DE TUTORIALES INICIADO');
+        console.log('📍 Botón tutorial paso a paso:', tutorialStepsButton);
+        console.log('📍 Botón video tutorial:', tutorialVideoButton);
         
-        // 5. TEST AUTOMÁTICO
         setTimeout(() => {
-            console.log('✅ SISTEMA DE TUTORIAL LISTO Y FUNCIONAL');
+            console.log('✅ SISTEMA DE TUTORIALES LISTO Y FUNCIONAL');
         }, 1000);
 
         // =============================================
@@ -1507,7 +1533,7 @@
             return { top, left };
         }
 
-        // Funciones del tutorial
+        // Funciones del tutorial paso a paso
         function showTutorialStep(stepNumber) {
             // Ocultar todos los pasos
             document.querySelectorAll('.tutorial-step').forEach(step => {
@@ -1555,11 +1581,7 @@
             }
         }
 
-        // Event listeners del tutorial (mantenidos para compatibilidad)
-        document.getElementById('tutorialClose').addEventListener('click', function() {
-            document.getElementById('tutorialOverlay').style.display = 'none';
-        });
-
+        // Event listeners del tutorial paso a paso
         document.getElementById('tutorialNext').addEventListener('click', nextTutorialStep);
         document.getElementById('tutorialPrev').addEventListener('click', prevTutorialStep);
 
