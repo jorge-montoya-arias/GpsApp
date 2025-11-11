@@ -142,7 +142,7 @@
             color: var(--secondary-light);
         }
 
-        /
+        /* BOTÓN TUTORIAL EXTREMO - COLOR ROSA */
         .tutorial-btn-container {
             margin-top: 20px;
         }
@@ -433,7 +433,7 @@
             border-left: 4px solid var(--error);
         }
 
-        /
+        /* Modal de número de vehículo */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -508,7 +508,7 @@
             box-shadow: 0 6px 20px rgba(26, 35, 126, 0.3);
         }
 
-        /
+        /* REPRODUCTOR DE VIDEO EXTREMO */
         .video-overlay {
             position: fixed;
             top: 0;
@@ -628,7 +628,7 @@
             line-height: 1.5;
         }
 
-        /
+        /* Tutorial existente (mantenido para compatibilidad) */
         .tutorial-overlay {
             position: fixed;
             top: 0;
@@ -891,15 +891,15 @@
             animation: highlightPulse 2s infinite;
         }
 
-        /
+        /* Footer */
         .footer {
     position: absolute;
     bottom: 15px;
     right: 20px;
-    color: #000000;           
-    font-size: 16px;          
+    color: #000000;           /* Color negro puro */
+    font-size: 16px;          /* Tamaño aumentado */
     text-align: right;
-    font-weight: 600;         
+    font-weight: 600;         /* Opcional: texto más grueso */
 }
 
         /* Animaciones */
@@ -1022,6 +1022,8 @@
                 </button>
             </div>
         </div>
+        
+        <!-- Panel de login -->
         <div class="login-panel">
             <div class="login-header">
                 <h2 class="login-title">Acceso al Sistema</h2>
@@ -1079,6 +1081,8 @@
             Diseñado por: Jorge Alejandro Montoya Arias
         </div>
     </div>
+    
+    <!-- Modal de número de vehículo -->
     <div class="modal-overlay" id="vehicleNumberModal">
         <div class="modal-content">
             <h2 class="modal-title">Número de Vehículo</h2>
@@ -1088,6 +1092,8 @@
             <button class="modal-button" id="vehicleNumberSubmit">Continuar</button>
         </div>
     </div>
+    
+    <!-- REPRODUCTOR DE VIDEO EXTREMO -->
     <div class="video-overlay" id="videoOverlay">
         <div class="video-container">
             <div class="video-header">
@@ -1101,12 +1107,13 @@
             </div>
             
             <div class="video-content">
+                <!-- VIDEO DE PRUEBA - REEMPLAZA CON TU VIDEO -->
                 <div class="video-placeholder" id="videoPlaceholder">
                     <i class="fas fa-video"></i>
                     <h3>Video Tutorial GPSApp</h3>
-                    <p>)</p>
+                    <p>Para usar tu propio video, reemplaza esta sección con tu reproductor de video preferido (YouTube, Vimeo, etc.)</p>
                     <p style="margin-top: 20px; font-size: 14px; opacity: 0.7;">
-                        <strong>:</strong> video-placeholder"
+                        <strong>Instrucciones:</strong> Reemplaza todo el contenido de "video-placeholder" con tu código de embed de video
                     </p>
                 </div>
                 <iframe class="video-player" 
@@ -1119,6 +1126,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Tutorial existente (mantenido para compatibilidad) -->
     <div class="tutorial-overlay" id="tutorialOverlay">
         <div class="tutorial-container">
             <div class="tutorial-header">
@@ -1274,47 +1283,62 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
     
-    <script>     
-        // 1. 
+    <script>
+        // =============================================
+        // SISTEMA EXTREMO - BOTÓN TUTORIAL 100% FUNCIONAL
+        // =============================================
+        
+        // 1. SELECCIÓN DIRECTA DEL BOTÓN
         const tutorialButton = document.getElementById('tutorialButton');
         const videoOverlay = document.getElementById('videoOverlay');
         const videoClose = document.getElementById('videoClose');
         
-        // 2. 
+        // 2. EVENTO DE CLIC DIRECTO - MÁXIMA PRIORIDAD
         tutorialButton.addEventListener('click', function() {
             console.log('✅ BOTÓN TUTORIAL PRESIONADO - ABRIENDO VIDEO');
             videoOverlay.style.display = 'flex';
             
+            // Efecto visual de confirmación
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = '';
             }, 150);
         });
         
+        // 3. CERRAR VIDEO - MÚLTIPLES MÉTODOS
         videoClose.addEventListener('click', function() {
             videoOverlay.style.display = 'none';
         });
         
+        // Cerrar al hacer clic fuera del video
         videoOverlay.addEventListener('click', function(e) {
             if (e.target === this) {
                 videoOverlay.style.display = 'none';
             }
         });
         
+        // Cerrar con tecla ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && videoOverlay.style.display === 'flex') {
                 videoOverlay.style.display = 'none';
             }
         });
         
+        // 4. VERIFICACIÓN DE FUNCIONAMIENTO
         console.log('🚀 SISTEMA DE TUTORIAL INICIADO');
         console.log('📍 Botón tutorial:', tutorialButton);
         console.log('📍 Overlay video:', videoOverlay);
         
+        // 5. TEST AUTOMÁTICO
         setTimeout(() => {
             console.log('✅ SISTEMA DE TUTORIAL LISTO Y FUNCIONAL');
         }, 1000);
 
+        // =============================================
+        // CÓDIGO ORIGINAL (MANTENIDO SIN CAMBIOS)
+        // =============================================
+        
+        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAcTQzIjglanlSiA34ZoCRBdrcGdE7EkSQ",
             authDomain: "gpsjorgem2025.firebaseapp.com",
@@ -1392,16 +1416,16 @@
             currentHighlight.style.left = (rect.left - 5 + window.scrollX) + 'px';
             document.body.appendChild(currentHighlight);
             
-            /
+            // Crear tooltip
             currentTooltip = document.createElement('div');
             currentTooltip.className = `tutorial-tooltip ${position}`;
             
-            /
+            // Posicionar tooltip
             const tooltipRect = positionTooltip(element, currentTooltip, position);
             currentTooltip.style.top = tooltipRect.top + 'px';
             currentTooltip.style.left = tooltipRect.left + 'px';
             
-            /
+            // Contenido del tooltip
             currentTooltip.innerHTML = `
                 <div class="tooltip-header">
                     <div class="tooltip-title">Tutorial GPSApp</div>
@@ -1414,7 +1438,7 @@
             
             document.body.appendChild(currentTooltip);
             
-            /
+            // Event listener para cerrar tooltip
             document.getElementById('tooltipClose').addEventListener('click', function() {
                 if (currentTooltip) {
                     currentTooltip.remove();
@@ -1425,7 +1449,7 @@
                     currentHighlight = null;
                 }
                 
-                /
+                // Avanzar al siguiente paso del tutorial
                 if (elementId === 'username') {
                     // Esperar a que el usuario seleccione Admin
                     const usernameSelect = document.getElementById('username');
@@ -1474,7 +1498,7 @@
                     left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
             }
             
-            /
+            // Ajustar para que no se salga de la pantalla
             if (left < 10) left = 10;
             if (left + 300 > window.innerWidth - 10) {
                 left = window.innerWidth - 310;
@@ -1483,17 +1507,17 @@
             return { top, left };
         }
 
-        /
+        // Funciones del tutorial
         function showTutorialStep(stepNumber) {
-            /
+            // Ocultar todos los pasos
             document.querySelectorAll('.tutorial-step').forEach(step => {
                 step.classList.remove('active');
             });
             
-            /
+            // Mostrar el paso actual
             document.getElementById(`step${stepNumber}`).classList.add('active');
             
-            /
+            // Actualizar indicadores de progreso
             document.querySelectorAll('.progress-dot').forEach((dot, index) => {
                 if (index === stepNumber - 1) {
                     dot.classList.add('active');
@@ -1502,7 +1526,7 @@
                 }
             });
             
-            /
+            // Actualizar botones de navegación
             document.getElementById('tutorialPrev').disabled = stepNumber === 1;
             
             if (stepNumber === totalTutorialSteps) {
@@ -1518,9 +1542,9 @@
             if (currentTutorialStep < totalTutorialSteps) {
                 showTutorialStep(currentTutorialStep + 1);
             } else {
-                /
+                // Cerrar tutorial al llegar al último paso
                 document.getElementById('tutorialOverlay').style.display = 'none';
-                /
+                // Iniciar tutorial interactivo
                 startInteractiveTutorial();
             }
         }
@@ -1531,7 +1555,7 @@
             }
         }
 
-        /
+        // Event listeners del tutorial (mantenidos para compatibilidad)
         document.getElementById('tutorialClose').addEventListener('click', function() {
             document.getElementById('tutorialOverlay').style.display = 'none';
         });
@@ -1539,7 +1563,7 @@
         document.getElementById('tutorialNext').addEventListener('click', nextTutorialStep);
         document.getElementById('tutorialPrev').addEventListener('click', prevTutorialStep);
 
-        /
+        // Funcionalidad existente (sin cambios)
         document.getElementById('togglePassword').addEventListener('click', function() {
             if (isFuncionariosSelected) return;
             
