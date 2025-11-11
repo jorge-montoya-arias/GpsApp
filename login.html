@@ -1166,14 +1166,15 @@
                 if (elementId === 'username') {
                     // Esperar a que el usuario seleccione Admin
                     const usernameSelect = document.getElementById('username');
-                    usernameSelect.addEventListener('change', function handleAdminSelection() {
+                    const handleAdminSelection = function() {
                         if (this.value === 'Admin') {
                             usernameSelect.removeEventListener('change', handleAdminSelection);
                             setTimeout(() => {
                                 showTooltipForElement('loginButton', 'Presione ingresar al sistema para continuar', 'top');
                             }, 500);
                         }
-                    });
+                    };
+                    usernameSelect.addEventListener('change', handleAdminSelection);
                 } else if (elementId === 'loginButton') {
                     // Finalizar tutorial interactivo
                     interactiveTutorialActive = false;
@@ -1183,7 +1184,6 @@
 
         function positionTooltip(element, tooltip, position) {
             const elementRect = element.getBoundingClientRect();
-            const tooltipRect = tooltip.getBoundingClientRect();
             const scrollX = window.scrollX || window.pageXOffset;
             const scrollY = window.scrollY || window.pageYOffset;
             
@@ -1191,30 +1191,30 @@
             
             switch (position) {
                 case 'top':
-                    top = elementRect.top - tooltipRect.height - 10 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+                    top = elementRect.top - 150 + scrollY;
+                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
                     break;
                 case 'bottom':
                     top = elementRect.bottom + 10 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
                     break;
                 case 'left':
-                    top = elementRect.top + (elementRect.height / 2) - (tooltipRect.height / 2) + scrollY;
-                    left = elementRect.left - tooltipRect.width - 10 + scrollX;
+                    top = elementRect.top + (elementRect.height / 2) - 75 + scrollY;
+                    left = elementRect.left - 320 + scrollX;
                     break;
                 case 'right':
-                    top = elementRect.top + (elementRect.height / 2) - (tooltipRect.height / 2) + scrollY;
+                    top = elementRect.top + (elementRect.height / 2) - 75 + scrollY;
                     left = elementRect.right + 10 + scrollX;
                     break;
                 default:
                     top = elementRect.bottom + 10 + scrollY;
-                    left = elementRect.left + (elementRect.width / 2) - (tooltipRect.width / 2) + scrollX;
+                    left = elementRect.left + (elementRect.width / 2) - 150 + scrollX;
             }
             
             // Ajustar para que no se salga de la pantalla
             if (left < 10) left = 10;
-            if (left + tooltipRect.width > window.innerWidth - 10) {
-                left = window.innerWidth - tooltipRect.width - 10;
+            if (left + 300 > window.innerWidth - 10) {
+                left = window.innerWidth - 310;
             }
             
             return { top, left };
